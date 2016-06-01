@@ -1,25 +1,44 @@
 ---
-# defaults file for mediapeers.filebeat
 
-filebeat_logstash_server: localhost
-filebeat_logstash_server_port: 5044
+logzio_token: YOUR_LOGZIO_TOKEN
 
-filebeat_logstash_tls: false
-filebeat_logstash_tls_certificate_authorities: []
-filebeat_logstash_tls_certificate:
-filebeat_logstash_tls_certificate_key:
-filebeat_logstash_tls_insecure: false
+# Install and configure Topbeat
+logzio_topbeat: false
+
+# Install and configure Packetbeat
+logzio_packetbeat: false
+
+logzio_logstash_server: listener.logz.io
+logzio_logstash_server_port: 5015
+logzio_logstash_tls: true
+logzio_logstash_tls_certificate_authorities:
+  - /etc/pki/tls/certs/COMODORSADomainValidationSecureServerCA.crt
+logzio_logstash_tls_certificate:
+logzio_logstash_tls_certificate_key:
+logzio_logstash_tls_insecure: false
+
+# Example, overwrite this variable:
+logzio_logs:
+  - 
+    # Paths for files you want forwarded to Logz.io
+    paths:
+      - '/var/log/apache2/access.log'
+      - '/var/log/apache2/error.log'
+    # codec must be 'plain' or 'json'
+    codec: plain 
+    # Informational tag describing what type of data these files contain
+    type: apache2
 
 
 # Example, overwrite this variable:
-filebeat_prospectors:
+logzio_prospectors:
   -
     paths:
       - '/var/log/syslog'
       - '/var/log/auth.log'
     input_type: log
     fields:
-      source: filebeat
+      source: logzio
       format: syslog
     document_type: syslog
   -
@@ -28,7 +47,7 @@ filebeat_prospectors:
       - '/opt/my_app2/log/production.log'
     input_type: log
     fields:
-      source: filebeat
+      source: logzio
       format: my_app
     document_type: my_app_log
   -
@@ -37,7 +56,7 @@ filebeat_prospectors:
     input_type: log
     ignore_older: 24h
     fields:
-      source: filebeat
+      source: logzio
       format: nginx
     document_type: nginx
 
@@ -48,7 +67,7 @@ filebeat_prospectors:
 # The field `fields` just adds more metatdata to the message.
 
 
-# Extra prospectors - will be added to filebeat_prospectors list at runtime.
+# Extra prospectors - will be added to logzio_prospectors list at runtime.
 # Facilitates having a base set of prospectors plus extra prospectors per host
 # or group.
-filebeat_extra_prospectors: []
+logzio_extra_prospectors: []

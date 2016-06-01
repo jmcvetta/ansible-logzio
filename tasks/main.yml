@@ -1,31 +1,43 @@
 ---
-# tasks file for mediapeers.filebeat
 
-- name: Add elastic apt repo key (for all elastic software)
+- name: Ensure Elastic GPG key is added
   apt_key:
     url: "https://packages.elastic.co/GPG-KEY-elasticsearch"
     state: present
 
-# Install filebeat as a logstash client (to deliver logs), just for demoing
 
-- name: Add filebeat apt repo
+- name: Ensure Beats repository is added
   apt_repository:
     repo: "deb https://packages.elastic.co/beats/apt stable main"
     update_cache: yes
     state: present
 
-- name: Install filebeat apt package
+
+- name: Ensure Filebeat is installed
   apt:
     name: filebeat
     state: present
 
-- name: Configure filebeat to read from logfiles and deliver to logstash
+
+- name: Ensure Filebeat is configured
   template:
     src: filebeat.yml.j2
     dest: /etc/filebeat/filebeat.yml
   notify: restart filebeat
 
-- name: Enable filebeat on bootup and ensure it's started
+
+- name: Ensure Filebeat is started and enabled on boot
   service:
     name: filebeat
     enabled: yes
+    state: started
+
+
+- include: topbeat.yml
+  notify: restart filebeat
+  when: logzio_topbeat
+
+- include: packetbeat.yml
+  notify: restart filebeat
+  when: logzio_packetbeat
+

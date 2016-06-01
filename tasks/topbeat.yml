@@ -1,0 +1,26 @@
+# vim:ft=ansible:
+---
+
+- name: Ensure Topbeat log folder exists
+  file:
+    path: /var/log/topbeat
+    state: directory
+
+
+- name: Ensure Topbeat is installed
+  apt:
+    name: topbeat
+    state: present
+
+- name: Ensure Topbeat is configured
+  template:
+    src: topbeat.yml.j2
+    dest: /etc/topbeat/topbeat.yml
+
+
+- name: Ensure Topbeat is started and enabled on boot
+  service:
+    name: topbeat
+    enabled: yes
+    state: started
+

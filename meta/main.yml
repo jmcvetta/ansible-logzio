@@ -1,17 +1,17 @@
 ---
 galaxy_info:
-  author: Stefan Horning
-  description: Role to install and configure filebeat
-  company: Mediapeers GmbH
-  license: BSD
-  min_ansible_version: 1.9
+  author: Jason McVetta <jason.mcvetta@gmail.com>
+  description: Forward logs to Logz.io
+  company: siliconheavy.com
+  license: license(MIT)
+  min_ansible_version: 2.0
   platforms:
   - name: Ubuntu
     versions:
-    - all
+    - trusty
   categories:
   - monitoring
-dependencies: []
-  # List your role dependencies here, one per line.
-  # Be sure to remove the '[]' above if you add dependencies
-  # to this list.
+  - logging
+  - logzio
+dependencies: 
+- jmcvetta.cfssl-trust

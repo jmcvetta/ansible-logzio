@@ -12,11 +12,31 @@
 filebeat:
   # List of prospectors to fetch data.
   prospectors:
-    # Each - is a prospector. Below are the prospector specific configurations
+
+  - 
+    paths:
+      - '/var/log/syslog'
+      - '/var/log/auth.log'
+    fields:
+      logzio_codec: plain
+      token: "{{ logzio_token }}"
+    fields_under_root: true
+    document_type: syslog
+
 {% for prospector in filebeat_all_prospectors %}
     -
       {{ prospector|to_nice_yaml|indent(6) }}
 
+{% endfor %}
+
+{% for log in logzio_logs %}
+    -
+      paths: {{ log.paths | to_nice_yaml | indent(6) }}
+      fields:
+        logzio_codec:  {{ log.codec }}
+        token: "{{ logzio_token }}"
+    fields_under_root: true
+    document_type: {{ log.type }}
 {% endfor %}
 
   # General filebeat configuration options

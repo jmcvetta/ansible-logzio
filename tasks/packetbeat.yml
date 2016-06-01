@@ -1,0 +1,26 @@
+# vim:ft=ansible:
+---
+
+- name: Ensure Packetbeat log folder exists
+  file:
+    path: /var/log/packetbeat
+    state: directory
+
+
+- name: Ensure Packetbeat is installed
+  apt:
+    name: packetbeat
+    state: present
+
+- name: Ensure Packetbeat is configured
+  template:
+    src: packetbeat.yml.j2
+    dest: /etc/packetbeat/packetbeat.yml
+
+
+- name: Ensure Packetbeat is started and enabled on boot
+  service:
+    name: packetbeat
+    enabled: yes
+    state: started
+
