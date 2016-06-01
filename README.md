@@ -1,58 +1,64 @@
-[![Build Status](https://travis-ci.org/mediapeers/ansible-role-filebeat.svg?branch=master)](https://travis-ci.org/mediapeers/ansible-role-filebeat)
+[![Build Status](https://travis-ci.org/jmcvetta/ansible-logzio.svg?branch=master)](https://travis-ci.org/jmcvetta/ansible-logzio)
 
-# Ansible role to install & configure filebeat
-Ansible role that installs filebeat on Linux using the apt package elastic provides.
+jmcvetta.logzio
+===============
 
-Also sets up the filebeat.yml config file based on role parameters.
-This role ist mostly designed to setup filebeat for collection of logfile content and sending 
-it on to logstash. If you want other outputters you might have to change a bunch of things first!
+Ansible role to configure forwarding logs to [Logz.io](http://logz.io) using
+Filebeat.  Can also configure Topbeat and Packetbeat to forward their data to
+Logz.io.
 
-## Requirements
-Debian based Linux, tested on Ubuntu. Recent version of Ansible. Only utilized Ansible core modules.
+Based on [mediapeers.filebeat](https://galaxy.ansible.com/mediapeers/filebeat)
+by [Stefan Horning](mailto:horning@mediapeers.com).
 
-## Role Variables
+
+Requirements
+------------
+
+Tested on Ubuntu 14.04LTS
+
+
+Role Variables
+--------------
+
 ```yaml
-# List of files to read logs from:
-filebeat_prospectors:
-  - { paths: /var/log/*/*.log, input_type: log, document_type: log}
-
-# Logstash server to send logs to:
-filebeat_logstash_server: 'logstash.server.com'
-filebeat_logstash_server_port: 5044
-filebeat_logstash_tls: false
-filebeat_logstash_tls_certificate_authorities: []
-filebeat_logstash_tls_certificate:
-filebeat_logstash_tls_certificate_key:
-filebeat_logstash_tls_insecure: false
 ```
 
-You can also define variable `filebeat_extra_prospectors` on a per-host or
-per-group basis.  This variable is concatenated with `filebeat_prospectors`
+You can also define variable `logzio_extra_prospectors` on a per-host or
+per-group basis.  This variable is concatenated with `logzio_prospectors`
 when rendering the configuration template.
 
 
-## Dependencies
-This role has no dependencies to other roles.
+Dependencies
+------------
 
-## Example Playbook
-Copy this role into the roles/mediapeers.filebeat dir in your Ansible project. Preferably add it as a submodule.
-You can also install it with `ansible-galaxy install mediapeers.filebeat`.
-Then use it like so:
+* [jmcvetta.cfssl-trust](https://galaxy.ansible.com/jmcvetta/cfssl-trust/)
+
+
+Example Playbook
+----------------
 
 ```yaml
-- name: My nice play
+- name: Ensure logs are forwarded to Logz.io
   hosts: servers
   vars:
-    - filebeat_logstash_server: 'logstash.my.server'
-    - filebeat_logstash_server_port: 5044
-    - filebeat_logfiles:
-      - /var/log/syslog
+    - logzio_token: YOUR_TOKEN_GOES_HERE
   roles:
-    - mediapeers.filebeat
+    - jmcvetta.logzio
 ```
 
-## License
-BSD
 
-## Author Information
-Stefan Horning <horning[-at-]mediapeers.com>
+License
+-------
+
+This is Free Software, released under the terms of the Apache v2 license.  See
+file `LICENSE` for more details.  Resist intellectual serfdom - the ownership
+of ideas is akin to slavery.
+
+
+Author Information
+------------------
+
+[Jason McVetta](mailto:jason.mcvetta@gmail.com)
+
+Support and consulting services are available from [Silicon
+Heavy](http://siliconheavy.com).
