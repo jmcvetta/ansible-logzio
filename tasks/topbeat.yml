@@ -12,10 +12,12 @@
     name: topbeat
     state: present
 
+
 - name: Ensure Topbeat is configured
   template:
     src: topbeat.yml.j2
     dest: /etc/topbeat/topbeat.yml
+  notify: restart topbeat
 
 
 - name: Ensure Topbeat is started and enabled on boot

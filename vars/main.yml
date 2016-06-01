@@ -1,3 +1,4 @@
 ---
 
-logzio_all_prospectors: "{{ logzio_prospectors + logzio_extra_prospectors }}"
+logzio_all_logs: "{{ logzio_logs + logzio_extra_logs }}"
+

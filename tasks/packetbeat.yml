@@ -12,10 +12,12 @@
     name: packetbeat
     state: present
 
+
 - name: Ensure Packetbeat is configured
   template:
     src: packetbeat.yml.j2
     dest: /etc/packetbeat/packetbeat.yml
+  notify: restart packetbeat
 
 
 - name: Ensure Packetbeat is started and enabled on boot

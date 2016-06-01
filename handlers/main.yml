@@ -5,3 +5,14 @@
   service:
     name: filebeat
     state: restarted
+
+- name: restart topbeat
+  service:
+    name: topbeat
+    state: restarted
+
+- name: restart packetbeat
+  service:
+    name: packetbeat
+    state: restarted
+

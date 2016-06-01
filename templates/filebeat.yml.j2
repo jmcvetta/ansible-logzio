@@ -13,33 +13,69 @@ filebeat:
   # List of prospectors to fetch data.
   prospectors:
 
-  - 
-    paths:
-      - '/var/log/syslog'
-      - '/var/log/auth.log'
-    fields:
-      logzio_codec: plain
-      token: "{{ logzio_token }}"
-    fields_under_root: true
-    document_type: syslog
+    - 
+      # System logs
+      paths:
+        - /var/log/apt/history.log
+        - /var/log/auth.log
+        - /var/log/alternatives.log
+        - /var/log/cloud-init.log
+        - /var/log/dmesg
+        - /var/log/dpkg.log
+        - /var/log/kern.log
+        - /var/log/syslog
+        - /var/log/udev
+        - /var/log/upstart/systemd-logind.log
+{% if logzio_packetbeat %}
+        - /var/log/packetbeat/packetbeat
+{% endif %}
+{% if logzio_topbeat %}
+        - /var/log/topbeat/topbeat
+{% endif %}
+      fields:
+        logzio_codec: plain
+        token: "{{ logzio_token }}"
+      fields_under_root: true
+      ignore_older: "{{ logzio_ignore_older }}"
+      document_type: syslog
 
-{% for prospector in filebeat_all_prospectors %}
+{% if logzio_topbeat %}
     -
-      {{ prospector|to_nice_yaml|indent(6) }}
+      paths:
+        - /var/run/topbeat/topbeat
+      fields:
+        logzio_codec: json
+        token: "{{ logzio_token }}"
+      fields_under_root: true
+      ignore_older: "{{ logzio_ignore_older }}"
+      document_type: topbeat
 
-{% endfor %}
-
-{% for log in logzio_logs %}
+{% endif %}
+{% if logzio_packetbeat %}
     -
-      paths: {{ log.paths | to_nice_yaml | indent(6) }}
+      paths:
+        - /var/run/packetbeat/packetbeat
+      fields:
+        logzio_codec: json
+        token: "{{ logzio_token }}"
+      fields_under_root: true
+      ignore_older: "{{ logzio_ignore_older }}"
+      document_type: packetbeat
+
+{% endif %}
+{% for log in logzio_all_logs %}
+    -
+      paths: 
+        {{ log.paths | to_nice_yaml | indent(8) }}
       fields:
         logzio_codec:  {{ log.codec }}
         token: "{{ logzio_token }}"
-    fields_under_root: true
-    document_type: {{ log.type }}
+      fields_under_root: true
+      ignore_older: "{{ logzio_ignore_older }}"
+      document_type: {{ log.type }}
 {% endfor %}
 
-  # General filebeat configuration options
+  # General logzio configuration options
   #
   # Event count spool threshold - forces network flush if exceeded
   #spool_size: 1024
@@ -50,111 +86,26 @@ filebeat:
 
   # Name of the registry file. Per default it is put in the current working
   # directory. In case the working directory is changed after when running
-  # filebeat again, indexing starts from the beginning again.
-  registry_file: /var/lib/filebeat/registry
+  # logzio again, indexing starts from the beginning again.
+  registry_file: /var/lib/logzio/registry
 
   # Full Path to directory with additional prospector configuration files. Each file must end with .yml
-  # These config files must have the full filebeat config part inside, but only
+  # These config files must have the full logzio config part inside, but only
   # the prospector part is processed. All global options like spool_size are ignored.
-  # The config_dir MUST point to a different directory then where the main filebeat config file is in.
+  # The config_dir MUST point to a different directory then where the main logzio config file is in.
   #config_dir:
 
 
 ############################# Output ##########################################
 
 # Configure what outputs to use when sending the data collected by the beat.
-# Multiple outputs may be used.
 output:
-
-  ### Logstash as output
   logstash:
     # The Logstash hosts
-    hosts: ["{{filebeat_logstash_server}}:{{filebeat_logstash_server_port}}"]
-
-    # Number of workers per Logstash host.
-    #worker: 1
-
-    # Optional load balance the events between the Logstash hosts
-    #loadbalance: true
-
-    # Optional index name. The default index name depends on the each beat.
-    # For Packetbeat, the default is set to packetbeat, for Topbeat
-    # top topbeat and for Filebeat to filebeat.
-    #index: filebeat
-
-{% if filebeat_logstash_tls %}
-    # Optional TLS. By default is off.
+    hosts: ["listener.logz.io:5015"]
     tls:
-      {% if filebeat_logstash_tls_certificate_authorities %}
       # List of root certificates for HTTPS server verifications
-      certificate_authorities: 
-        {{ filebeat_logstash_tls_certificate_authorities | to_nice_yaml | indent(8) }}
-      {% endif %}
-
-      {% if filebeat_logstash_tls_certificate %}
-      # Certificate for TLS client authentication
-      certificate: {{ filebeat_logstash_tls_certificate }}
-      {% endif %}
-
-      {% if filebeat_logstash_tls_certificate_key %}
-      # Client Certificate Key
-      certificate_key: {{ filebeat_logstash_tls_certificate_key }}
-      {% endif %}
-
-      # Controls whether the client verifies server certificates and host name.
-      # If insecure is set to true, all server host names and certificates will be
-      # accepted. In this mode TLS based connections are susceptible to
-      # man-in-the-middle attacks. Use only for testing.
-      insecure: {{ filebeat_logstash_tls_insecure }}
-
-
-      # Configure cipher suites to be used for TLS connections
-      #cipher_suites: []
-
-      # Configure curve types for ECDHE based cipher suites
-      #curve_types: []
-{% endif %}
-
-
-  ### Console output
-  # console:
-    # Pretty print json event
-    #pretty: false
-
-
-############################# Shipper #########################################
-
-shipper:
-  # The name of the shipper that publishes the network data. It can be used to group
-  # all the transactions sent by a single shipper in the web interface.
-  # If this options is not defined, the hostname is used.
-  #name:
-
-  # The tags of the shipper are included in their own field with each
-  # transaction published. Tags make it easy to group servers by different
-  # logical properties.
-  #tags: ["service-X", "web-tier"]
-
-  # Uncomment the following if you want to ignore transactions created
-  # by the server on which the shipper is installed. This option is useful
-  # to remove duplicates if shippers are installed on multiple servers.
-  #ignore_outgoing: true
-
-  # How often (in seconds) shippers are publishing their IPs to the topology map.
-  # The default is 10 seconds.
-  #refresh_topology_freq: 10
-
-  # Expiration time (in seconds) of the IPs published by a shipper to the topology map.
-  # All the IPs will be deleted afterwards. Note, that the value must be higher than
-  # refresh_topology_freq. The default is 15 seconds.
-  #topology_expire: 15
-
-  # Configure local GeoIP database support.
-  # If no paths are not configured geoip is disabled.
-  #geoip:
-    #paths:
-    #  - "/usr/share/GeoIP/GeoLiteCity.dat"
-    #  - "/usr/local/var/GeoIP/GeoLiteCity.dat"
+      certificate_authorities: ["/etc/pki/tls/certs/COMODORSADomainValidationSecureServerCA.crt"]
 
 
 ############################# Logging #########################################

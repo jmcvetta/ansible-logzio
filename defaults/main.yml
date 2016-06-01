@@ -5,17 +5,11 @@ logzio_token: YOUR_LOGZIO_TOKEN
 # Install and configure Topbeat
 logzio_topbeat: false
 
+# In seconds, defines how often to read server statistics
+logzio_topbeat_period: 60
+
 # Install and configure Packetbeat
 logzio_packetbeat: false
-
-logzio_logstash_server: listener.logz.io
-logzio_logstash_server_port: 5015
-logzio_logstash_tls: true
-logzio_logstash_tls_certificate_authorities:
-  - /etc/pki/tls/certs/COMODORSADomainValidationSecureServerCA.crt
-logzio_logstash_tls_certificate:
-logzio_logstash_tls_certificate_key:
-logzio_logstash_tls_insecure: false
 
 # Example, overwrite this variable:
 logzio_logs:
@@ -29,45 +23,11 @@ logzio_logs:
     # Informational tag describing what type of data these files contain
     type: apache2
 
+# Extra logs - will be added to logzio_logs list at runtime.  Facilitates
+# having a base set of logs plus extra logs per host or group.
+logzio_extra_logs: []
 
-# Example, overwrite this variable:
-logzio_prospectors:
-  -
-    paths:
-      - '/var/log/syslog'
-      - '/var/log/auth.log'
-    input_type: log
-    fields:
-      source: logzio
-      format: syslog
-    document_type: syslog
-  -
-    paths:
-      - '/opt/my_app1/log/production.log'
-      - '/opt/my_app2/log/production.log'
-    input_type: log
-    fields:
-      source: logzio
-      format: my_app
-    document_type: my_app_log
-  -
-    paths:
-      - '/var/log/nginx/*.log'
-    input_type: log
-    ignore_older: 24h
-    fields:
-      source: logzio
-      format: nginx
-    document_type: nginx
+# Ignore files which were modified more then the defined timespan in the past.
+# Time strings like 2h (2 hours), 5m (5 minutes) can be used.
+logzio_ignore_older: 24h
 
-# Make sure the fields paths, input_type is defined for each prospector. Other things are optional.
-# The field document_type default to 'log'.
-# Set a custom one here if you want to apply differen message filters for different
-# log formats in logstash later/
-# The field `fields` just adds more metatdata to the message.
-
-
-# Extra prospectors - will be added to logzio_prospectors list at runtime.
-# Facilitates having a base set of prospectors plus extra prospectors per host
-# or group.
-logzio_extra_prospectors: []
