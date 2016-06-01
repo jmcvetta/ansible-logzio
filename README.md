@@ -50,9 +50,9 @@ Example Playbook
 License
 -------
 
-This is Free Software, released under the terms of the Apache v2 license.  See
-file `LICENSE` for more details.  Resist intellectual serfdom - the ownership
-of ideas is akin to slavery.
+This is Free Software, released under the terms of the [Apache v2
+license](LICENSE).  Resist intellectual serfdom - the ownership of ideas is
+akin to slavery.
 
 
 Author Information
