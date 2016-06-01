@@ -20,11 +20,9 @@ filebeat:
         - /var/log/auth.log
         - /var/log/alternatives.log
         - /var/log/cloud-init.log
-        - /var/log/dmesg
         - /var/log/dpkg.log
         - /var/log/kern.log
         - /var/log/syslog
-        - /var/log/udev
         - /var/log/upstart/systemd-logind.log
 {% if logzio_packetbeat %}
         - /var/log/packetbeat/packetbeat
