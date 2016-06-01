@@ -4,8 +4,10 @@ jmcvetta.logzio
 ===============
 
 Ansible role to configure forwarding logs to [Logz.io](http://logz.io) using
-Filebeat.  Can also configure Topbeat and Packetbeat to forward their data to
-Logz.io.
+[Filebeat](https://www.elastic.co/products/beats/filebeat).  Can also configure
+[Topbeat](https://www.elastic.co/products/beats/topbeat) and
+[Packetbeat](https://www.elastic.co/products/beats/packetbeat) to forward their
+data to Logz.io.
 
 Based on [mediapeers.filebeat](https://galaxy.ansible.com/mediapeers/filebeat)
 by [Stefan Horning](mailto:horning@mediapeers.com).
