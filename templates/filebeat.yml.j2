@@ -13,7 +13,7 @@ filebeat:
   # List of prospectors to fetch data.
   prospectors:
 
-    - 
+    - document_type: syslog
       # System logs
       paths:
         - /var/log/apt/history.log
@@ -35,10 +35,9 @@ filebeat:
         token: "{{ logzio_token }}"
       fields_under_root: true
       ignore_older: "{{ logzio_ignore_older }}"
-      document_type: syslog
 
 {% if logzio_topbeat %}
-    -
+    - document_type: topbeat
       paths:
         - /var/run/topbeat/topbeat
       fields:
@@ -46,11 +45,10 @@ filebeat:
         token: "{{ logzio_token }}"
       fields_under_root: true
       ignore_older: "{{ logzio_ignore_older }}"
-      document_type: topbeat
 
 {% endif %}
 {% if logzio_packetbeat %}
-    -
+    - document_type: packetbeat
       paths:
         - /var/run/packetbeat/packetbeat
       fields:
@@ -58,11 +56,10 @@ filebeat:
         token: "{{ logzio_token }}"
       fields_under_root: true
       ignore_older: "{{ logzio_ignore_older }}"
-      document_type: packetbeat
 
 {% endif %}
 {% for log in logzio_all_logs %}
-    -
+    - document_type: {{ log.type }}
       paths: 
         {{ log.paths | to_nice_yaml | indent(8) }}
       fields:
@@ -70,7 +67,7 @@ filebeat:
         token: "{{ logzio_token }}"
       fields_under_root: true
       ignore_older: "{{ logzio_ignore_older }}"
-      document_type: {{ log.type }}
+
 {% endfor %}
 
   # General logzio configuration options
