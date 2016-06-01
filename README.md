@@ -21,6 +21,37 @@ Role Variables
 --------------
 
 ```yaml
+logzio_token: YOUR_LOGZIO_TOKEN
+
+# Install and configure Topbeat
+logzio_topbeat: false
+
+# In seconds, defines how often to read server statistics
+logzio_topbeat_period: 60
+
+# Install and configure Packetbeat
+logzio_packetbeat: false
+
+# Example, overwrite this variable:
+logzio_logs:
+  - 
+    # Paths for files you want forwarded to Logz.io
+    paths:
+      - '/var/log/apache2/access.log'
+      - '/var/log/apache2/error.log'
+    # codec must be 'plain' or 'json'
+    codec: plain 
+    # Informational tag describing what type of data these files contain
+    type: apache2
+
+# Extra logs - will be added to logzio_logs list at runtime.  Facilitates
+# having a base set of logs plus extra logs per host or group.
+logzio_extra_logs: []
+
+# Ignore files which were modified more then the defined timespan in the past.
+# Time strings like 2h (2 hours), 5m (5 minutes) can be used.
+logzio_ignore_older: 24h
+
 ```
 
 You can also define variable `logzio_extra_prospectors` on a per-host or
@@ -41,7 +72,7 @@ Example Playbook
 - name: Ensure logs are forwarded to Logz.io
   hosts: servers
   vars:
-    - logzio_token: YOUR_TOKEN_GOES_HERE
+    logzio_token: YOUR_TOKEN_GOES_HERE
   roles:
     - jmcvetta.logzio
 ```
