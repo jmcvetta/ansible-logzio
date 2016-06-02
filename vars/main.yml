@@ -13,7 +13,7 @@ _system_log_paths:
   - /var/log/upstart/systemd-logind.log
 
 # These are the log files for the beat daemons - NOT the beat output files!
-_beat_log_paths: "{{ ['/var/log/topbeat/topbeat'] if logzio_topbeat else [] + ['/var/log/packetbeat/packetbeat'] if logzio_packetbeat else [] }}"
+_beat_log_paths: "{{ (['/var/log/topbeat/topbeat'] if logzio_topbeat else []) + (['/var/log/packetbeat/packetbeat'] if logzio_packetbeat else []) }}"
 
 _system_logs:
   - type: syslog
@@ -35,7 +35,7 @@ _packetbeat_logs:
       - /var/run/packetbeat/packetbeat
     codec: json
 
-_beat_logs: "{{ _topbeat_logs if logzio_topbeat else [] + _packetbeat_logs if logzio_packetbeat else [] }}"
+_beat_logs: "{{ (_topbeat_logs if logzio_topbeat else []) + (_packetbeat_logs if logzio_packetbeat else []) }}"
 
 
 # This is the variable that's actually used in the template
