@@ -7,13 +7,13 @@ _system_log_paths:
   - /var/log/auth.log
   - /var/log/cloud-init.log
   - /var/log/dpkg.log
-  - /var/log/filebeat/filebeat
+  - /var/log/filebeat/log
   - /var/log/kern.log
   - /var/log/syslog
   - /var/log/upstart/systemd-logind.log
 
 # These are the log files for the beat daemons - NOT the beat output files!
-_beat_log_paths: "{{ (['/var/log/topbeat/topbeat'] if logzio_topbeat else []) + (['/var/log/packetbeat/packetbeat'] if logzio_packetbeat else []) }}"
+_beat_log_paths: "{{ (['/var/log/topbeat/log'] if logzio_topbeat else []) + (['/var/log/packetbeat/log'] if logzio_packetbeat else []) }}"
 
 _system_logs:
   - type: syslog
@@ -26,13 +26,13 @@ _system_logs:
 _topbeat_logs:
   - type: topbeat
     paths: 
-      - /var/run/topbeat/topbeat
+      - /var/log/topbeat/topbeat
     codec: json
 
 _packetbeat_logs:
   - type: packetbeat
     paths: 
-      - /var/run/packetbeat/packetbeat
+      - /var/log/packetbeat/packetbeat
     codec: json
 
 _beat_logs: "{{ (_topbeat_logs if logzio_topbeat else []) + (_packetbeat_logs if logzio_packetbeat else []) }}"
