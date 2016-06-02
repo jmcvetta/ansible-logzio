@@ -15,7 +15,7 @@
 #-------------------------------------------------------------------------------
 
 interfaces:
-  device: any
+  device: "{{ logzio_packetbeat_interfaces }}"
 
 #-------------------------------------------------------------------------------
 #
@@ -167,6 +167,6 @@ logging:
     name: log
     rotateeverybytes: 10485760 # = 10MB
     keepfiles: 5
-  level: warning
+  level: "{{ logzio_daemon_log_level }}"
 
 
