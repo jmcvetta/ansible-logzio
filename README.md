@@ -89,10 +89,6 @@ logzio_packetbeat: false
 logzio_packetbeat_interfaces: any
 ```
 
-You can also define variable `logzio_extra_prospectors` on a per-host or
-per-group basis.  This variable is concatenated with `logzio_prospectors`
-when rendering the configuration template.
-
 
 Dependencies
 ------------
