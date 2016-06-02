@@ -21,61 +21,17 @@ filebeat:
 
   prospectors:
 
-    - document_type: syslog
-      # System logs
-      paths:
-        - /var/log/alternatives.log
-        - /var/log/apt/history.log
-        - /var/log/auth.log
-        - /var/log/cloud-init.log
-        - /var/log/dpkg.log
-        - /var/log/filebeat/filebeat
-        - /var/log/kern.log
-        - /var/log/syslog
-        - /var/log/upstart/systemd-logind.log
-{% if logzio_packetbeat %}
-        - /var/log/packetbeat/packetbeat
-{% endif %}
-{% if logzio_topbeat %}
-        - /var/log/topbeat/topbeat
-{% endif %}
-      fields:
-        logzio_codec: plain
-        token: "{{ logzio_token }}"
-      fields_under_root: true
-      ignore_older: "{{ logzio_ignore_older }}"
-
-{% if logzio_topbeat %}
-    - document_type: topbeat
-      paths:
-        - /var/run/topbeat/topbeat
-      fields:
-        logzio_codec: json
-        token: "{{ logzio_token }}"
-      fields_under_root: true
-      ignore_older: "{{ logzio_ignore_older }}"
-
-{% endif %}
-{% if logzio_packetbeat %}
-    - document_type: packetbeat
-      paths:
-        - /var/run/packetbeat/packetbeat
-      fields:
-        logzio_codec: json
-        token: "{{ logzio_token }}"
-      fields_under_root: true
-      ignore_older: "{{ logzio_ignore_older }}"
-
-{% endif %}
 {% for log in logzio_all_logs %}
     - document_type: {{ log.type }}
       paths: 
         {{ log.paths | to_nice_yaml | indent(8) }}
       fields:
         logzio_codec:  {{ log.codec }}
-        token: "{{ logzio_token }}"
+        token: {{ logzio_token }}
       fields_under_root: true
-      ignore_older: "{{ logzio_ignore_older }}"
+      {% if logzio_ignore_older %}
+      ignore_older: {{ logzio_ignore_older }}
+      {% endif %}
 
 {% endfor %}
 
