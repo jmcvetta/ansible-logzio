@@ -33,7 +33,7 @@ input:
 
 output:
   file:
-    path: "/var/run/topbeat"
+    path: "/var/log/topbeat"
     filename: topbeat
     rotate_every_kb: 10000
     number_of_files: 5
@@ -50,7 +50,7 @@ logging:
   to_files: true
   files:
     path: /var/log/topbeat
-    name: topbeat
+    name: log
     rotateeverybytes: 10485760 # = 10MB
     keepfiles: 5
   level: warning
