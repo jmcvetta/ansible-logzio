@@ -1,99 +1,48 @@
 # vim:ft=ansible:
 #===============================================================================
 #
-# Filebeat Configuration
+# Filebeat configuration for forwarding to Logz.io
 #
 #-------------------------------------------------------------------------------
 # {{ ansible_managed }}
 #===============================================================================
 
 
-############################# Filebeat ######################################
+#-------------------------------------------------------------------------------
+#
+# Filebeat
+#
+#-------------------------------------------------------------------------------
+
 filebeat:
-  # List of prospectors to fetch data.
+  spool_size: 1024
+  idle_timeout: 5s
+  registry_file: /var/lib/logzio/registry
+
   prospectors:
 
-    - document_type: syslog
-      # System logs
-      paths:
-        - /var/log/apt/history.log
-        - /var/log/auth.log
-        - /var/log/alternatives.log
-        - /var/log/cloud-init.log
-        - /var/log/dpkg.log
-        - /var/log/kern.log
-        - /var/log/syslog
-        - /var/log/upstart/systemd-logind.log
-{% if logzio_packetbeat %}
-        - /var/log/packetbeat/packetbeat
-{% endif %}
-{% if logzio_topbeat %}
-        - /var/log/topbeat/topbeat
-{% endif %}
-      fields:
-        logzio_codec: plain
-        token: "{{ logzio_token }}"
-      fields_under_root: true
-      ignore_older: "{{ logzio_ignore_older }}"
-
-{% if logzio_topbeat %}
-    - document_type: topbeat
-      paths:
-        - /var/run/topbeat/topbeat
-      fields:
-        logzio_codec: json
-        token: "{{ logzio_token }}"
-      fields_under_root: true
-      ignore_older: "{{ logzio_ignore_older }}"
-
-{% endif %}
-{% if logzio_packetbeat %}
-    - document_type: packetbeat
-      paths:
-        - /var/run/packetbeat/packetbeat
-      fields:
-        logzio_codec: json
-        token: "{{ logzio_token }}"
-      fields_under_root: true
-      ignore_older: "{{ logzio_ignore_older }}"
-
-{% endif %}
 {% for log in logzio_all_logs %}
     - document_type: {{ log.type }}
       paths: 
         {{ log.paths | to_nice_yaml | indent(8) }}
       fields:
         logzio_codec:  {{ log.codec }}
-        token: "{{ logzio_token }}"
+        token: {{ logzio_token }}
       fields_under_root: true
-      ignore_older: "{{ logzio_ignore_older }}"
+      {% if logzio_ignore_older %}
+      ignore_older: {{ logzio_ignore_older }}
+      {% endif %}
 
 {% endfor %}
 
-  # General logzio configuration options
-  #
-  # Event count spool threshold - forces network flush if exceeded
-  #spool_size: 1024
-
-  # Defines how often the spooler is flushed. After idle_timeout the spooler is
-  # Flush even though spool_size is not reached.
-  #idle_timeout: 5s
-
-  # Name of the registry file. Per default it is put in the current working
-  # directory. In case the working directory is changed after when running
-  # logzio again, indexing starts from the beginning again.
-  registry_file: /var/lib/logzio/registry
-
-  # Full Path to directory with additional prospector configuration files. Each file must end with .yml
-  # These config files must have the full logzio config part inside, but only
-  # the prospector part is processed. All global options like spool_size are ignored.
-  # The config_dir MUST point to a different directory then where the main logzio config file is in.
-  #config_dir:
 
 
-############################# Output ##########################################
+#-------------------------------------------------------------------------------
+#
+# Output
+#
+#-------------------------------------------------------------------------------
 
-# Configure what outputs to use when sending the data collected by the beat.
 output:
   logstash:
     # The Logstash hosts
@@ -103,42 +52,19 @@ output:
       certificate_authorities: ["/etc/pki/tls/certs/COMODORSADomainValidationSecureServerCA.crt"]
 
 
-############################# Logging #########################################
+#-------------------------------------------------------------------------------
+#
+# Logging
+#
+#-------------------------------------------------------------------------------
 
-# There are three options for the log ouput: syslog, file, stderr.
-# Under Windos systems, the log files are per default sent to the file output,
-# under all other system per default to syslog.
 logging:
-
-  # Send all logging output to syslog. On Windows default is false, otherwise
-  # default is true.
-  #to_syslog: true
-
-  # Write all logging output to files. Beats automatically rotate files if rotateeverybytes
-  # limit is reached.
+  to_syslog: false
   to_files: true
-
-  # To enable logging to files, to_files option has to be set to true
   files:
-    # The directory where the log files will written to.
     path: /var/log/filebeat
-
-    # The name of the files where the logs are written to.
-    #name: mybeat
-
-    # Configure log file size limit. If limit is reached, log file will be
-    # automatically rotated
+    name: filebeat
     rotateeverybytes: 10485760 # = 10MB
-
-    # Number of rotated log files to keep. Oldest files will be deleted first.
     keepfiles: 5
-
-  # Enable debug output for selected components. To enable all selectors use ["*"]
-  # Other available selectors are beat, publish, service
-  # Multiple selectors can be chained.
-  #selectors: [ ]
-
-  # Sets log level. The default log level is error.
-  # Available log levels are: critical, error, warning, info, debug
-  level: error
+  level: warning
 

@@ -28,6 +28,7 @@ logzio_logs:
 logzio_extra_logs: []
 
 # Ignore files which were modified more then the defined timespan in the past.
-# Time strings like 2h (2 hours), 5m (5 minutes) can be used.
-logzio_ignore_older: 24h
+# Time strings like 2h (2 hours), 5m (5 minutes) can be used, or the value can 
+# be left blank to disablet this option (default).
+logzio_ignore_older: 
 
