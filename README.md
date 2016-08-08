@@ -89,10 +89,6 @@ logzio_packetbeat: false
 logzio_packetbeat_interfaces: any
 ```
 
-You can also define variable `logzio_extra_prospectors` on a per-host or
-per-group basis.  This variable is concatenated with `logzio_prospectors`
-when rendering the configuration template.
-
 
 Dependencies
 ------------
@@ -108,6 +104,11 @@ Example Playbook
   hosts: servers
   vars:
     logzio_token: YOUR_TOKEN_GOES_HERE
+	logzio_logs:
+      - type: fail2ban
+	    codec: plain
+        paths:
+          - /var/log/fail2ban.log
   roles:
     - jmcvetta.logzio
 ```
@@ -116,9 +117,9 @@ Example Playbook
 License
 -------
 
-This is Free Software, released under the terms of the [Apache v2
-license](LICENSE).  Resist intellectual serfdom - the ownership of ideas is
-akin to slavery.
+This is [Free Software](http://www.gnu.org/philosophy/free-sw.en.html),
+released under the terms of the [Apache v2 license](LICENSE).  Resist
+intellectual serfdom - the ownership of ideas is akin to slavery.
 
 
 Author Information

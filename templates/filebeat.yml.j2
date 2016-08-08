@@ -29,9 +29,9 @@ filebeat:
         logzio_codec:  {{ log.codec }}
         token: {{ logzio_token }}
       fields_under_root: true
-      {% if logzio_ignore_older %}
+{% if logzio_ignore_older %}
       ignore_older: {{ logzio_ignore_older }}
-      {% endif %}
+{% endif %}
 
 {% endfor %}
 
