@@ -1,4 +1,11 @@
 # vim:ft=ansible:
+#
+# Copyright (c) 2016 Jason McVetta.
+#
+# This is Free Software, released under the terms of the Apache v2 license.
+# See http://www.apache.org/licenses/LICENSE-2.0 for details.
+#
+# Resist intellectual serfdom.  The ownership of ideas is akin to slavery.
 ---
 
 - name: Ensure Topbeat log folder exists
