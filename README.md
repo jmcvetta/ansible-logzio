@@ -118,8 +118,7 @@ License
 -------
 
 This is [Free Software](http://www.gnu.org/philosophy/free-sw.en.html),
-released under the terms of the [Apache v2 license](LICENSE).  Resist
-intellectual serfdom - the ownership of ideas is akin to slavery.
+released under the terms of the [Apache v2 license](LICENSE).
 
 
 Author Information
