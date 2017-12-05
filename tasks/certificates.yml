@@ -1,0 +1,14 @@
+---
+
+- name: Create folder for certificates
+  file:
+    path: /etc/pki/tls/certs
+    state: directory
+    recurse: yes
+
+- name: Copy certificate file
+  get_url:
+    url: "{{ certificate_url }}"
+    dest: "/etc/pki/tls/certs/{{ certificate_filename }}"
+
+

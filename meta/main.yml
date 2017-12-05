@@ -13,5 +13,3 @@ galaxy_info:
   - monitoring
   - logging
   - logzio
-dependencies: 
-- jmcvetta.cfssl-trust

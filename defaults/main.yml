@@ -1,6 +1,11 @@
 # vim:ft=ansible:
 ---
 
+certificate_url: https://raw.githubusercontent.com/logzio/public-certificates/master/COMODORSADomainValidationSecureServerCA.crt
+certificate_filename: "{{ certificate_url | urlsplit('path') | basename }}"
+certificate_folder: "/etc/pki/tls/certs/"
+certificate_file: "{{ certificate_folder }}{{ certificate_filename}}"
+
 logzio_token: YOUR_LOGZIO_TOKEN
 
 # Logging level for Filebeat, Topbeat, and Packetbeat daemons

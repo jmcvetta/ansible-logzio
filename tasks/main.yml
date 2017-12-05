@@ -6,6 +6,8 @@
 # Resist intellectual serfdom.  The ownership of ideas is akin to slavery.
 ---
 
+- include: certificates.yml
+
 - name: Ensure Elastic GPG key is added
   apt_key:
     url: "https://packages.elastic.co/GPG-KEY-elasticsearch"
