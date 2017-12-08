@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/jmcvetta/ansible-logzio.svg?branch=master)](https://travis-ci.org/jmcvetta/ansible-logzio)
 
-jmcvetta.logzio
-===============
+ou.logzio
+=========
 
 Ansible role to configure forwarding logs to [Logz.io](http://logz.io) using
 [Filebeat](https://www.elastic.co/products/beats/filebeat).  Can also configure
@@ -57,6 +57,8 @@ logzio_extra_logs: []
 logzio_ignore_older: 
 
 
+
+
 #-------------------------------------------------------------------------------
 #
 # Topbeat
@@ -88,12 +90,6 @@ logzio_packetbeat: false
 # Netowrk interface devices to monitor
 logzio_packetbeat_interfaces: any
 ```
-
-
-Dependencies
-------------
-
-* [jmcvetta.cfssl-trust](https://galaxy.ansible.com/jmcvetta/cfssl-trust/)
 
 
 Example Playbook

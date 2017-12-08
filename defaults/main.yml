@@ -1,6 +1,11 @@
 # vim:ft=ansible:
 ---
 
+certificate_url: https://raw.githubusercontent.com/logzio/public-certificates/master/COMODORSADomainValidationSecureServerCA.crt
+certificate_filename: "{{ certificate_url | urlsplit('path') | basename }}"
+certificate_folder: "/etc/pki/tls/certs/"
+certificate_file: "{{ certificate_folder }}{{ certificate_filename}}"
+
 logzio_token: YOUR_LOGZIO_TOKEN
 
 # Logging level for Filebeat, Topbeat, and Packetbeat daemons
@@ -45,7 +50,7 @@ logzio_ignore_older:
 logzio_topbeat: false
 
 # In seconds, defines how often to read server statistics
-logzio_topbeat_period: 60
+logzio_topbeat_period: 30
 
 # What information should Topbeat monitor?
 logzio_topbeat_system: true
