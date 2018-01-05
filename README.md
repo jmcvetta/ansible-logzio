@@ -90,12 +90,6 @@ logzio_packetbeat_interfaces: any
 ```
 
 
-Dependencies
-------------
-
-* [jmcvetta.cfssl-trust](https://galaxy.ansible.com/jmcvetta/cfssl-trust/)
-
-
 Example Playbook
 ----------------
 
