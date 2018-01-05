@@ -50,7 +50,7 @@ logzio_ignore_older:
 logzio_topbeat: false
 
 # In seconds, defines how often to read server statistics
-logzio_topbeat_period: 30
+logzio_topbeat_period: 60
 
 # What information should Topbeat monitor?
 logzio_topbeat_system: true

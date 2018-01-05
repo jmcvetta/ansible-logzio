@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/jmcvetta/ansible-logzio.svg?branch=master)](https://travis-ci.org/jmcvetta/ansible-logzio)
 
-ou.logzio
-=========
+jmcvetta.logzio
+===============
 
 Ansible role to configure forwarding logs to [Logz.io](http://logz.io) using
 [Filebeat](https://www.elastic.co/products/beats/filebeat).  Can also configure
@@ -55,8 +55,6 @@ logzio_extra_logs: []
 # Time strings like 2h (2 hours), 5m (5 minutes) can be used, or the value can 
 # be left blank to disablet this option (default).
 logzio_ignore_older: 
-
-
 
 
 #-------------------------------------------------------------------------------
